@@ -1,0 +1,48 @@
+# Servidor web de Fichario en la Raspberry Pi (contenedor "web" de ~/fichario).
+# Cloudflare Tunnel envía aquí fichario.luisse.pro. HTTPS lo pone Cloudflare.
+:80 {
+	encode zstd gzip
+
+	# Cabeceras de seguridad para todas las respuestas.
+	# La CSP solo permite código y estilos servidos por la propia app: nada en línea, nada de fuera.
+	header {
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+		Cross-Origin-Opener-Policy "same-origin"
+		X-Frame-Options "DENY"
+		-Server
+	}
+
+	# API: el contenedor "api" (server/). Cloudflare pone la IP real en CF-Connecting-IP.
+	handle /api/* {
+		reverse_proxy api:8080
+	}
+
+	# Archivos con hash en el nombre: se pueden guardar un año.
+	@hashed path /assets/*
+	handle @hashed {
+		root * /srv
+		header Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+
+	# Tipografías e iconos: cambian muy poco.
+	@static path /fonts/* /icons/*
+	handle @static {
+		root * /srv
+		header Cache-Control "public, max-age=2592000"
+		file_server
+	}
+
+	# El resto es la app: cualquier ruta (/tarjetas, /c/…) devuelve index.html.
+	# Se revalida siempre, para que tras un despliegue se cargue la versión nueva.
+	handle {
+		root * /srv
+		header Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}
+}

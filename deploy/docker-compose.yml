@@ -1,0 +1,46 @@
+# ~/fichario/docker-compose.yml en la Raspberry Pi.
+#
+# GitHub Actions copia la web compilada a ./app/site y el código del servidor a ./app/server.
+# El servidor no tiene dependencias, así que se ejecuta directamente con la imagen oficial de Node
+# y se reinicia solo cuando cambia su código (--watch).
+#
+# La configuración y los secretos van en ./.env (ver docs/configuracion.md), nunca en el repo.
+services:
+  web:
+    image: caddy:2
+    restart: unless-stopped
+    volumes:
+      - ./app/site:/srv:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      default:
+      tunel:
+        # En el túnel se llama así, para no confundirse con el "web" del CV
+        aliases: [fichario-web]
+
+  api:
+    image: node:24-alpine
+    restart: unless-stopped
+    # Mismo usuario que el dueño de ~/fichario/datos en la Pi (comprobar con: id -u)
+    user: "1000:1000"
+    working_dir: /app
+    command: ["node", "--disable-warning=ExperimentalWarning", "--watch-path=/app/src", "src/server.mjs"]
+    env_file: .env
+    environment:
+      - PORT=8080
+      - DB_PATH=/data/fichario.db
+      - BACKUP_DIR=/data/copias
+      - CLIENT_IP_HEADER=cf-connecting-ip
+    volumes:
+      - ./app/server:/app:ro
+      - ./datos:/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/api/health"]
+      interval: 1m
+      timeout: 5s
+      retries: 3
+
+# Red compartida con el cloudflared de ~/web, para que el túnel llegue a "fichario-web".
+networks:
+  tunel:
+    external: true

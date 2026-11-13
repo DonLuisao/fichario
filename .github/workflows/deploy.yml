@@ -1,0 +1,142 @@
+name: Comprobar y desplegar
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: despliegue-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Pruebas y compilación
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Pruebas del servidor
+        working-directory: server
+        run: npm test
+
+      # Las versiones están fijadas en package.json; no hay package-lock para no depender de él.
+      - name: Instalar herramientas de la web
+        working-directory: web
+        run: npm install --no-audit --no-fund --no-package-lock
+
+      - name: Comprobar tipos
+        working-directory: web
+        run: npx tsc --noEmit
+
+      - name: Compilar la web
+        working-directory: web
+        run: npm run build
+
+      - name: Instalar Chromium
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+
+      - name: Prueba de extremo a extremo (con la CSP de producción)
+        working-directory: web
+        env:
+          SCREENSHOTS: capturas
+        run: npm run test:e2e
+
+      - name: Guardar capturas
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: capturas
+          path: web/capturas/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Guardar la web compilada
+        uses: actions/upload-artifact@v5
+        with:
+          name: web
+          path: web/dist/
+          retention-days: 7
+
+  deploy:
+    name: Desplegar en la Raspberry Pi
+    needs: build
+    # Solo en main, y solo cuando la variable DEPLOY_ENABLED del repo vale "true"
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: produccion
+      url: https://fichario.luisse.pro
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Descargar la web compilada
+        uses: actions/download-artifact@v5
+        with:
+          name: web
+          path: dist
+
+      - name: Entrar en la red de Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Preparar la clave SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          PI_KNOWN_HOSTS: ${{ secrets.PI_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$PI_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Comprobar que la clave está restringida a ~/fichario/app
+        env:
+          PI_USER: ${{ secrets.PI_USER }}
+          PI_HOST: ${{ secrets.PI_HOST }}
+        # Igual que en el CV: con rrsync, la orden se rechaza y el texto de control no aparece.
+        run: |
+          respuesta=$(ssh -o BatchMode=yes "$PI_USER@$PI_HOST" 'echo SIN_RESTRICCION' 2>&1 || true)
+          if printf '%s' "$respuesta" | grep -q 'SIN_RESTRICCION'; then
+            echo "::error::La clave de despliegue no está restringida con rrsync. Despliegue cancelado."
+            exit 1
+          fi
+          if ! printf '%s' "$respuesta" | grep -q 'rrsync'; then
+            echo "::error::Respuesta inesperada de la Pi: $respuesta"
+            exit 1
+          fi
+          echo "Clave restringida correctamente."
+
+      # Primero el servidor (se reinicia solo al ver el código nuevo) y después la web.
+      - name: Copiar el servidor
+        env:
+          PI_USER: ${{ secrets.PI_USER }}
+          PI_HOST: ${{ secrets.PI_HOST }}
+        run: rsync -rlt --delete --exclude test/ server/src server/package.json "$PI_USER@$PI_HOST:server/"
+
+      - name: Copiar la web
+        env:
+          PI_USER: ${{ secrets.PI_USER }}
+          PI_HOST: ${{ secrets.PI_HOST }}
+        run: rsync -rlt --delete --delay-updates dist/ "$PI_USER@$PI_HOST:site/"
+
+      - name: Comprobar que responde
+        run: |
+          for i in $(seq 1 12); do
+            if curl -fsS https://fichario.luisse.pro/api/health; then echo; exit 0; fi
+            sleep 5
+          done
+          echo "::error::https://fichario.luisse.pro/api/health no responde"
+          exit 1
