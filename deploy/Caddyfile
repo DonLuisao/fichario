@@ -1,4 +1,4 @@
-# Servidor web de Fichario en la Raspberry Pi (contenedor "web" de ~/fichario).
+# Servidor web de Fichario en la Raspberry Pi (contenedor "fichario-web" de ~/fichario).
 # Cloudflare Tunnel envía aquí fichario.luisse.pro. HTTPS lo pone Cloudflare.
 :80 {
 	encode zstd gzip

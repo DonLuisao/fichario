@@ -6,17 +6,15 @@
 #
 # La configuración y los secretos van en ./.env (ver docs/configuracion.md), nunca en el repo.
 services:
-  web:
+  # Ojo: no puede llamarse "web". cloudflared está en la red "tunel" y también en la del CV,
+  # y si los dos servicios se llaman igual, las visitas a luisse.pro pueden acabar aquí.
+  fichario-web:
     image: caddy:2
     restart: unless-stopped
     volumes:
       - ./app/site:/srv:ro
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-    networks:
-      default:
-      tunel:
-        # En el túnel se llama así, para no confundirse con el "web" del CV
-        aliases: [fichario-web]
+    networks: [default, tunel]
 
   api:
     image: node:24-alpine

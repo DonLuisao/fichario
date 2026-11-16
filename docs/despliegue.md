@@ -31,7 +31,7 @@ mkdir -p ~/fichario/app/site ~/fichario/app/server ~/fichario/datos
 Copia `deploy/docker-compose.yml` y `deploy/Caddyfile` del repo a `~/fichario/` (desde el Mac):
 
 ```sh
-scp deploy/docker-compose.yml deploy/Caddyfile pi-web:fichario/
+scp deploy/docker-compose.yml deploy/Caddyfile lu1sa0@raspi:fichario/
 ```
 
 Crea `~/fichario/.env` en la Pi con `nano ~/fichario/.env` (ver `docs/configuracion.md`) y
@@ -142,8 +142,8 @@ docker compose start api
 
 ## Si algo falla
 
-- `docker compose logs api` y `docker compose logs web` en `~/fichario`.
+- `docker compose logs api` y `docker compose logs fichario-web` en `~/fichario`.
 - 502 en la web: el contenedor `api` no está arrancado o aún no tiene el código (`ls ~/fichario/app/server`).
 - La web no carga: revisa la ruta del túnel y que `cloudflared` está en la red `tunel`
   (`docker network inspect tunel`).
-- Tras cambiar el `Caddyfile`: `docker compose exec web caddy reload --config /etc/caddy/Caddyfile`.
+- Tras cambiar el `Caddyfile`: `docker compose exec fichario-web caddy reload --config /etc/caddy/Caddyfile`.
