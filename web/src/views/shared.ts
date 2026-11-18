@@ -18,8 +18,8 @@ export async function sharedView({ token }: Record<string, string>): Promise<HTM
   const frame = (...content: Node[]) =>
     h('div', { class: 'shared' },
       h('header', { class: 'landing-top' },
-        h('a', { class: 'brand', href: '/', 'data-link': true }, h('img', { src: '/icons/icon.svg', alt: '', width: 26, height: 26 }), 'Fichario'),
-        store.user ? h('a', { class: 'btn btn-quiet', href: '/', 'data-link': true }, 'Ir a mi Fichario') : h('a', { class: 'btn btn-quiet', href: '/entrar', 'data-link': true }, 'Entrar'),
+        h('a', { class: 'brand', href: '/', 'data-link': true }, h('img', { src: '/icons/icon.svg', alt: '', width: 26, height: 26 }), 'Repaso'),
+        store.user ? h('a', { class: 'btn btn-quiet', href: '/', 'data-link': true }, 'Ir a mis tarjetas') : h('a', { class: 'btn btn-quiet', href: '/entrar', 'data-link': true }, 'Entrar'),
       ),
       h('main', { class: 'page' }, ...content));
 
@@ -27,7 +27,7 @@ export async function sharedView({ token }: Record<string, string>): Promise<HTM
   try {
     data = await get<Shared>(`/api/shared/${encodeURIComponent(token)}`);
   } catch (e) {
-    return frame(emptyState('No se puede abrir este enlace', errorMessage(e), h('a', { class: 'btn btn-primary', href: '/', 'data-link': true }, 'Ir a Fichario')));
+    return frame(emptyState('No se puede abrir este enlace', errorMessage(e), h('a', { class: 'btn btn-primary', href: '/', 'data-link': true }, 'Ir a Repaso')));
   }
 
   const cards: Card[] = data.cards.map((c) => ({ ...c, folder_id: null }));
@@ -36,13 +36,13 @@ export async function sharedView({ token }: Record<string, string>): Promise<HTM
   const saveButton = () => {
     if (!canCopy) return null;
     if (!store.user) return h('p', { class: 'muted' }, 'Para guardarte una copia, ', h('a', { href: '/entrar', 'data-link': true }, 'entra en tu cuenta'), ' y vuelve a abrir el enlace.');
-    const b = h('button', { class: 'btn btn-primary', type: 'button' }, 'Guardar en mi Fichario');
+    const b = h('button', { class: 'btn btn-primary', type: 'button' }, 'Guardar en mi cuenta');
     b.addEventListener('click', () =>
       busy(b, async () => {
         try {
           await post(`/api/shared/${encodeURIComponent(token)}/copy`);
           await store.sync();
-          toast(`Carpeta «${data.folder.name}» guardada en tu Fichario.`);
+          toast(`Carpeta «${data.folder.name}» guardada en tu cuenta.`);
           navigate('/');
         } catch (e) {
           toast(errorMessage(e), 'error');

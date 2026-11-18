@@ -3,14 +3,14 @@
 import { mkdirSync, readdirSync, rmSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-const NAME = /^fichario-(\d{4}-\d{2}-\d{2})\.db$/;
+const NAME = /^repaso-(\d{4}-\d{2}-\d{2})\.db$/;
 
 export function startBackups({ db, dir, keep = 14, now = () => Date.now(), log = console }) {
   mkdirSync(dir, { recursive: true });
 
   function run() {
     const day = new Date(now()).toISOString().slice(0, 10);
-    const file = join(dir, `fichario-${day}.db`);
+    const file = join(dir, `repaso-${day}.db`);
     if (!existsSync(file)) {
       try {
         db.exec(`VACUUM INTO '${file.replace(/'/g, "''")}'`);

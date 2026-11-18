@@ -1,9 +1,9 @@
 {
-  "name": "fichario-server",
+  "name": "repaso-server",
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "API de Fichario: cuentas, sincronización, estadísticas y carpetas compartidas. Sin dependencias.",
+  "description": "API de Repaso: cuentas, sincronización, estadísticas y carpetas compartidas. Sin dependencias.",
   "engines": {
     "node": ">=22.13"
   },

@@ -93,7 +93,7 @@ export function cardsView(_p: Record<string, string>, query: URLSearchParams): H
     h('summary', { class: 'btn btn-quiet', 'aria-label': 'Importar y exportar' }, 'Importar y exportar'),
     h('div', { class: 'menu-list' },
       h('button', { type: 'button', onClick: importDialog }, 'Importar CSV'),
-      h('a', { href: '/api/export.csv', download: 'fichario.csv' }, 'Exportar todo en CSV'),
+      h('a', { href: '/api/export.csv', download: 'repaso.csv' }, 'Exportar todo en CSV'),
       h('button', { type: 'button', onClick: () => exportEpub(null) }, 'Exportar todo como libro (EPUB)'),
     ),
   );
@@ -275,7 +275,7 @@ async function shareDialog(folder: Folder) {
   const paint = () => {
     const mode = h('div', { class: 'radio-list' },
       radio('view', 'Solo practicar', 'Quien abra el enlace puede repasar las tarjetas, sin cuenta.'),
-      radio('copy', 'Practicar y guardarse una copia', 'Quien tenga cuenta puede copiar la carpeta a su Fichario.'),
+      radio('copy', 'Practicar y guardarse una copia', 'Quien tenga cuenta puede guardarse la carpeta.'),
     );
     function radio(value: 'view' | 'copy', title: string, text: string) {
       const input = h('input', { type: 'radio', name: 'modo', value, checked: (share?.mode ?? 'copy') === value });
@@ -342,7 +342,7 @@ function importDialog() {
   target.querySelectorAll('option')[1]?.remove(); // "Sin carpeta" no tiene sentido como destino aquí
   const submit = h('button', { class: 'btn btn-primary', type: 'submit' }, 'Importar');
   const form = h('form', { class: 'dialog-body form', novalidate: true },
-    h('p', { class: 'muted' }, 'El formato es el de la versión anterior de Fichario: una tarjeta por línea con pregunta, respuesta, hasta tres respuestas falsas y el nombre de la carpeta. Las carpetas que no existan se crean.'),
+    h('p', { class: 'muted' }, 'El formato es el de Fichario, la versión anterior de Repaso: una tarjeta por línea con pregunta, respuesta, hasta tres respuestas falsas y el nombre de la carpeta. Las carpetas que no existan se crean.'),
     field('Archivo CSV', file),
     field('Carpeta de destino', target),
     err.el,
@@ -376,6 +376,6 @@ function exportEpub(folder: Folder | null) {
   if (!folder) groups.push({ folder: null, cards: store.cardsIn(null) });
   const nonEmpty = groups.filter((g) => g.cards.length);
   if (!nonEmpty.length) return toast('No hay tarjetas que exportar.', 'error');
-  const title = folder ? folder.name : 'Mis tarjetas de Fichario';
+  const title = folder ? folder.name : 'Mis tarjetas de Repaso';
   download(buildEpub(title, nonEmpty), `${title}.epub`);
 }

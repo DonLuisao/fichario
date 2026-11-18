@@ -1,7 +1,12 @@
-# Servidor web de Fichario en la Raspberry Pi (contenedor "fichario-web" de ~/fichario).
-# Cloudflare Tunnel envía aquí fichario.luisse.pro. HTTPS lo pone Cloudflare.
+# Servidor web de Repaso en la Raspberry Pi (contenedor "repaso-web" de ~/repaso).
+# Cloudflare Tunnel envía aquí repaso.luisse.pro. HTTPS lo pone Cloudflare.
 :80 {
 	encode zstd gzip
+
+	# Nombre antiguo: fichario.luisse.pro lleva a la misma ruta de repaso.luisse.pro,
+	# así siguen funcionando los enlaces compartidos y los marcadores de antes.
+	@antiguo host fichario.luisse.pro
+	redir @antiguo https://repaso.luisse.pro{uri} permanent
 
 	# Cabeceras de seguridad para todas las respuestas.
 	# La CSP solo permite código y estilos servidos por la propia app: nada en línea, nada de fuera.

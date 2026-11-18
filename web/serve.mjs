@@ -25,4 +25,4 @@ createServer((req, res) => {
   if (!file.startsWith(DIST) || !existsSync(file) || path.endsWith('/')) file = join(DIST, 'index.html');
   res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream', 'content-security-policy': CSP, 'cache-control': 'no-cache' });
   res.end(readFileSync(file));
-}).listen(PORT, () => console.log(`Fichario en http://localhost:${PORT} (API en ${API.origin})`));
+}).listen(PORT, () => console.log(`Repaso en http://localhost:${PORT} (API en ${API.origin})`));

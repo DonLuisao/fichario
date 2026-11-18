@@ -42,7 +42,7 @@ export function buildEpub(title: string, groups: { folder: Folder | null; cards:
       name: 'OEBPS/libro.opf',
       data: `<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="id" xml:lang="es">
-<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="id">${id}</dc:identifier><dc:title>${esc(title)}</dc:title><dc:language>es</dc:language><dc:creator>Fichario</dc:creator><meta property="dcterms:modified">${date}</meta></metadata>
+<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="id">${id}</dc:identifier><dc:title>${esc(title)}</dc:title><dc:language>es</dc:language><dc:creator>Repaso</dc:creator><meta property="dcterms:modified">${date}</meta></metadata>
 <manifest><item id="indice" href="indice.xhtml" media-type="application/xhtml+xml" properties="nav"/><item id="css" href="estilo.css" media-type="text/css"/>${chapters.map((c, i) => `<item id="c${i + 1}" href="${c.file}" media-type="application/xhtml+xml"/>`).join('')}</manifest>
 <spine><itemref idref="indice"/>${chapters.map((_, i) => `<itemref idref="c${i + 1}"/>`).join('')}</spine>
 </package>`,

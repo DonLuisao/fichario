@@ -135,7 +135,7 @@ export function shell(active: string, ...content: Child[]): HTMLElement {
         h('a', { href: '/registro', 'data-link': true }, 'Tengo una invitación'),
       ),
     h('header', { class: 'topbar' },
-      h('a', { class: 'brand', href: '/', 'data-link': true }, h('img', { src: '/icons/icon.svg', alt: '', width: 26, height: 26 }), 'Fichario'),
+      h('a', { class: 'brand', href: '/', 'data-link': true }, h('img', { src: '/icons/icon.svg', alt: '', width: 26, height: 26 }), 'Repaso'),
       h('nav', { class: 'tabs', 'aria-label': 'Secciones' },
         TABS.map((t) =>
           h('a', { href: t.href, 'data-link': true, class: t.href === active ? 'tab is-active' : 'tab', 'aria-current': t.href === active ? 'page' : null },

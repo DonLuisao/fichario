@@ -1,4 +1,4 @@
-# ~/fichario/docker-compose.yml en la Raspberry Pi.
+# ~/repaso/docker-compose.yml en la Raspberry Pi.
 #
 # GitHub Actions copia la web compilada a ./app/site y el código del servidor a ./app/server.
 # El servidor no tiene dependencias, así que se ejecuta directamente con la imagen oficial de Node
@@ -8,7 +8,7 @@
 services:
   # Ojo: no puede llamarse "web". cloudflared está en la red "tunel" y también en la del CV,
   # y si los dos servicios se llaman igual, las visitas a luisse.pro pueden acabar aquí.
-  fichario-web:
+  repaso-web:
     image: caddy:2
     restart: unless-stopped
     volumes:
@@ -19,14 +19,14 @@ services:
   api:
     image: node:24-alpine
     restart: unless-stopped
-    # Mismo usuario que el dueño de ~/fichario/datos en la Pi (comprobar con: id -u)
+    # Mismo usuario que el dueño de ~/repaso/datos en la Pi (comprobar con: id -u)
     user: "1000:1000"
     working_dir: /app
     command: ["node", "--disable-warning=ExperimentalWarning", "--watch-path=/app/src", "src/server.mjs"]
     env_file: .env
     environment:
       - PORT=8080
-      - DB_PATH=/data/fichario.db
+      - DB_PATH=/data/repaso.db
       - BACKUP_DIR=/data/copias
       - CLIENT_IP_HEADER=cf-connecting-ip
     volumes:
@@ -38,7 +38,7 @@ services:
       timeout: 5s
       retries: 3
 
-# Red compartida con el cloudflared de ~/web, para que el túnel llegue a "fichario-web".
+# Red compartida con el cloudflared de ~/web, para que el túnel llegue a "repaso-web".
 networks:
   tunel:
     external: true

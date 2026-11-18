@@ -1,9 +1,11 @@
-# Fichario
+# Repaso
 
 Tarjetas de estudio con modo test, estadísticas de progreso y carpetas compartidas.
 Funciona en el navegador y sin conexión, y se instala en el móvil como app.
 
-https://fichario.luisse.pro
+https://repaso.luisse.pro
+
+Antes se llamaba Fichario; https://fichario.luisse.pro redirige aquí.
 
 ## Estructura
 

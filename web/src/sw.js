@@ -1,7 +1,7 @@
-// Service worker de Fichario: guarda la app para que funcione sin conexión.
+// Service worker de Repaso: guarda la app para que funcione sin conexión.
 // Las peticiones a /api nunca se guardan: los datos los gestiona la propia app.
 const VERSION = '__VERSION__';
-const CACHE = `fichario-${VERSION}`;
+const CACHE = `repaso-${VERSION}`;
 const PRECACHE = __PRECACHE__;
 
 self.addEventListener('install', (event) => {
@@ -12,7 +12,7 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((k) => k.startsWith('fichario-') && k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k.startsWith('repaso-') && k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });

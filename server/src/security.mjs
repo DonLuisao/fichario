@@ -35,7 +35,7 @@ export async function verifyPassword(password, stored) {
 // y no revelar así qué correos están registrados.
 let dummyHash = null;
 export async function burnPasswordCheck(password) {
-  dummyHash ??= await hashPassword('fichario-no-existe');
+  dummyHash ??= await hashPassword('repaso-no-existe');
   await verifyPassword(password, dummyHash);
 }
 

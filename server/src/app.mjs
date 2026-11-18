@@ -10,7 +10,7 @@ import { transferRoutes } from './routes/transfer.mjs';
 import { adminRoutes } from './routes/admin.mjs';
 import { accountRoutes } from './routes/account.mjs';
 
-export const SESSION_COOKIE = 'fichario_sesion';
+export const SESSION_COOKIE = 'repaso_sesion';
 export const SESSION_DAYS = 30;
 const DAY = 86_400_000;
 const UNSAFE = new Set(['POST', 'PUT', 'DELETE']);

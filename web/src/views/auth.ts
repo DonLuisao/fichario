@@ -14,7 +14,7 @@ async function signedIn(user: User) {
 
 function authFrame(title: string, intro: string | null, form: Node, foot: Node | null): HTMLElement {
   return h('div', { class: 'auth' },
-    h('a', { class: 'brand auth-brand', href: '/', 'data-link': true }, h('img', { src: '/icons/icon.svg', alt: '', width: 28, height: 28 }), 'Fichario'),
+    h('a', { class: 'brand auth-brand', href: '/', 'data-link': true }, h('img', { src: '/icons/icon.svg', alt: '', width: 28, height: 28 }), 'Repaso'),
     h('section', { class: 'auth-card' }, h('h1', null, title), intro && h('p', { class: 'muted' }, intro), form),
     foot && h('p', { class: 'auth-foot' }, foot),
   );
@@ -63,14 +63,14 @@ export function landing(): HTMLElement {
 
   return h('div', { class: 'landing' },
     h('header', { class: 'landing-top' },
-      h('span', { class: 'brand' }, h('img', { src: '/icons/icon.svg', alt: '', width: 28, height: 28 }), 'Fichario'),
+      h('span', { class: 'brand' }, h('img', { src: '/icons/icon.svg', alt: '', width: 28, height: 28 }), 'Repaso'),
       h('a', { class: 'btn btn-quiet', href: '/entrar', 'data-link': true }, 'Entrar'),
     ),
     h('section', { class: 'hero' },
       h('div', { class: 'hero-text' },
         h('h1', null, 'Pregunta, respuesta y otra vez. Hasta que se quede.'),
         h('p', { class: 'lead' },
-          'Fichario es un cuaderno de tarjetas para estudiar oposiciones, certificaciones o lo que toque. Repasa dándoles la vuelta o en modo test, y mira qué temas se te resisten.'),
+          'Repaso es un cuaderno de tarjetas para estudiar oposiciones, certificaciones o lo que toque. Dales la vuelta o hazte un test, y mira qué temas se te resisten.'),
         h('div', { class: 'hero-actions' },
           demo,
           h('a', { class: 'btn btn-quiet btn-lg', href: '/registro', 'data-link': true }, 'Tengo una invitación'),
@@ -85,7 +85,7 @@ export function landing(): HTMLElement {
       feature('Funciona sin conexión', 'Instálala en el móvil y estudia en el metro. Los cambios se suben solos al volver la cobertura.'),
     ),
     h('footer', { class: 'landing-foot' },
-      'Fichario es un proyecto personal de ',
+      'Repaso es un proyecto personal de ',
       h('a', { href: 'https://luisse.pro' }, 'Luis Sánchez Elvira'),
       '. Sin anuncios ni cookies de seguimiento.',
     ),
@@ -160,7 +160,7 @@ export function register(_p: Record<string, string>, query: URLSearchParams): HT
       }
     });
   });
-  return authFrame('Crear tu cuenta', 'Fichario funciona por invitación. Escribe el código que te han pasado.', form,
+  return authFrame('Crear tu cuenta', 'Repaso funciona por invitación. Escribe el código que te han pasado.', form,
     h('span', null, '¿Ya tienes cuenta? ', h('a', { href: '/entrar', 'data-link': true }, 'Entra')));
 }
 

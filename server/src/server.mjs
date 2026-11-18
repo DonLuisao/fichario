@@ -1,4 +1,4 @@
-// Arranque del servidor de Fichario.
+// Arranque del servidor de Repaso.
 import { createApp } from './app.mjs';
 import { loadConfig } from './config.mjs';
 import { openDb } from './db.mjs';
@@ -11,7 +11,7 @@ const server = createApp({ config, db, sendEmail: createMailer(config) });
 const backups = config.backupDir ? startBackups({ db: db.raw, dir: config.backupDir, keep: config.backupKeep }) : null;
 
 server.listen(config.port, () => {
-  console.log(`Fichario escuchando en el puerto ${config.port}`);
+  console.log(`Repaso escuchando en el puerto ${config.port}`);
   console.log(`Origen de la app: ${config.appOrigin}`);
   if (!config.adminEmail) console.warn('ADMIN_EMAIL no está definido: nadie podrá registrarse sin invitación.');
   if (!config.resendApiKey) console.warn('RESEND_API_KEY no está definido: los correos se escribirán en el log.');

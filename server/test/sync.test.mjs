@@ -102,9 +102,9 @@ describe('sincronización', () => {
   test('la cuenta demo puede leer pero no guardar', async () => {
     const { data } = await admin.post('/api/admin/invites', { count: 1 });
     const demo = app.client();
-    await demo.post('/api/auth/register', { email: 'demo@fichario.test', password: 'demo-1234', invite: data.codes[0] });
+    await demo.post('/api/auth/register', { email: 'demo@repaso.test', password: 'demo-1234', invite: data.codes[0] });
     const { data: users } = await admin.get('/api/admin/users');
-    const demoUser = users.users.find((u) => u.email === 'demo@fichario.test');
+    const demoUser = users.users.find((u) => u.email === 'demo@repaso.test');
     await admin.post(`/api/admin/users/${demoUser.id}/demo`, { is_demo: true });
 
     const visitante = app.client();

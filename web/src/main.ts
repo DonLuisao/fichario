@@ -15,7 +15,7 @@ import { sharedView } from './views/shared';
 import { studyRoute } from './views/study';
 
 const app = document.getElementById('app')!;
-const LAST_USER = 'fichario:usuario';
+const LAST_USER = 'repaso:usuario';
 
 type View = Parameters<typeof route>[1];
 const signedIn = (view: View): View => (params, query) => (store.user ? view(params, query) : (navigate('/entrar', { replace: true }), document.createTextNode('')));
@@ -37,10 +37,10 @@ setRenderer(
   (node) => {
     app.replaceChildren(node);
     const title = (node as HTMLElement).querySelector?.('h1')?.textContent;
-    document.title = title && title !== 'Fichario' ? `${title}. Fichario` : 'Fichario';
+    document.title = title && title !== 'Repaso' ? `${title}. Repaso` : 'Repaso';
   },
   () => (store.user ? shell('', emptyState('Esta página no existe', 'Puede que el enlace esté mal copiado.', h('a', { class: 'btn btn-primary', href: '/', 'data-link': true }, 'Volver al inicio')))
-    : emptyState('Esta página no existe', 'Puede que el enlace esté mal copiado.', h('a', { class: 'btn btn-primary', href: '/', 'data-link': true }, 'Ir a Fichario'))),
+    : emptyState('Esta página no existe', 'Puede que el enlace esté mal copiado.', h('a', { class: 'btn btn-primary', href: '/', 'data-link': true }, 'Ir a Repaso'))),
 );
 
 onUnauthorized(() => {

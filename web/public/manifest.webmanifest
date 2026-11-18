@@ -1,6 +1,6 @@
 {
-  "name": "Fichario",
-  "short_name": "Fichario",
+  "name": "Repaso",
+  "short_name": "Repaso",
   "description": "Tarjetas de estudio con modo test, estadísticas y carpetas compartidas.",
   "lang": "es",
   "start_url": "/",

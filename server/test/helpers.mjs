@@ -9,8 +9,8 @@ export const DAY = 86_400_000;
 export async function startServer(env = {}) {
   const config = loadConfig({
     APP_ORIGIN: ORIGIN,
-    ADMIN_EMAIL: 'admin@fichario.test',
-    DEMO_EMAIL: 'demo@fichario.test',
+    ADMIN_EMAIL: 'admin@repaso.test',
+    DEMO_EMAIL: 'demo@repaso.test',
     DEMO_PASSWORD: 'demo-1234',
     ...env,
   });
@@ -83,7 +83,7 @@ export class Client {
 // Crea el admin y devuelve su cliente ya con sesión.
 export async function adminClient(app) {
   const admin = app.client();
-  const res = await admin.post('/api/auth/register', { email: 'admin@fichario.test', password: 'contraseña-admin', name: 'Luis' });
+  const res = await admin.post('/api/auth/register', { email: 'admin@repaso.test', password: 'contraseña-admin', name: 'Luis' });
   if (res.status !== 200) throw new Error(`No se pudo crear el admin: ${JSON.stringify(res.data)}`);
   return admin;
 }

@@ -1,9 +1,9 @@
 {
-  "name": "fichario-web",
+  "name": "repaso-web",
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "App web de Fichario: TypeScript sin framework, compilada con esbuild.",
+  "description": "App web de Repaso: TypeScript sin framework, compilada con esbuild.",
   "scripts": {
     "build": "node build.mjs",
     "dev": "node build.mjs --watch",

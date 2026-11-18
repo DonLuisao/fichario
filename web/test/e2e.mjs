@@ -23,7 +23,7 @@ const CSP = /Content-Security-Policy "([^"]+)"/.exec(caddy)[1];
 // ---- Servidor de la API ----
 const PORT = 4300 + Math.floor(Math.random() * 500);
 const ORIGIN = `http://localhost:${PORT}`;
-const config = loadConfig({ APP_ORIGIN: ORIGIN, ADMIN_EMAIL: 'luis@fichario.test', COOKIE_SECURE: 'false' });
+const config = loadConfig({ APP_ORIGIN: ORIGIN, ADMIN_EMAIL: 'luis@repaso.test', COOKIE_SECURE: 'false' });
 const db = openDb(':memory:');
 const emails = [];
 const api = createApp({ config, db, sendEmail: async (m) => emails.push(m) });
@@ -94,7 +94,7 @@ try {
   t('registro de la cuenta de administración (sin invitación)');
   await page.getByRole('link', { name: 'Tengo una invitación' }).click();
   await page.getByLabel('Nombre').fill('Luis');
-  await page.getByLabel('Correo').fill('luis@fichario.test');
+  await page.getByLabel('Correo').fill('luis@repaso.test');
   await page.getByLabel('Contraseña').fill('una-contraseña-larga');
   await page.getByRole('button', { name: 'Crear cuenta' }).click();
   await page.getByRole('heading', { name: 'Hola, Luis' }).waitFor();
@@ -201,12 +201,12 @@ try {
 
   t('registrarse con la invitación y guardarse la copia');
   await guest.goto(`${ORIGIN}/registro?codigo=${code}`);
-  await guest.getByLabel('Correo').fill('ana@fichario.test');
+  await guest.getByLabel('Correo').fill('ana@repaso.test');
   await guest.getByLabel('Contraseña').fill('otra-contraseña-larga');
   await guest.getByRole('button', { name: 'Crear cuenta' }).click();
   await guest.getByRole('heading', { name: 'Hola' }).waitFor();
   await guest.goto(shareUrl);
-  await guest.getByRole('button', { name: 'Guardar en mi Fichario' }).click();
+  await guest.getByRole('button', { name: 'Guardar en mi cuenta' }).click();
   await guest.getByRole('heading', { name: '¿Qué estudiamos hoy?' }).waitFor();
   await guest.getByText('4 tarjetas, de Luis').waitFor();
   await shot(guest, '12-inicio-movil');
@@ -231,14 +231,14 @@ try {
   await guest.getByLabel('Escribe tu contraseña para confirmar').fill('otra-contraseña-larga');
   await guest.getByRole('button', { name: 'Borrar mi cuenta para siempre' }).click();
   await guest.getByRole('heading', { name: /Hasta que se quede/ }).waitFor();
-  assert.equal(db.prepare("SELECT COUNT(*) AS n FROM users WHERE email = 'ana@fichario.test'").get().n, 0);
+  assert.equal(db.prepare("SELECT COUNT(*) AS n FROM users WHERE email = 'ana@repaso.test'").get().n, 0);
 
   t('restablecer la contraseña por correo');
   await page.getByRole('link', { name: 'Ajustes' }).first().click();
   await page.getByRole('button', { name: 'Cerrar sesión' }).click();
   await page.getByRole('link', { name: 'Entrar' }).click();
   await page.getByRole('link', { name: 'He olvidado mi contraseña' }).click();
-  await page.getByLabel('Correo').fill('luis@fichario.test');
+  await page.getByLabel('Correo').fill('luis@repaso.test');
   await page.getByRole('button', { name: 'Enviar enlace' }).click();
   await page.getByText('te llegará el enlace').waitFor();
   await page.waitForTimeout(200);
@@ -247,7 +247,7 @@ try {
   await page.getByLabel('Contraseña nueva').fill('contraseña-nueva-larga');
   await page.getByRole('button', { name: 'Guardar contraseña' }).click();
   await page.getByRole('heading', { name: 'Entrar' }).waitFor();
-  await page.getByLabel('Correo').fill('luis@fichario.test');
+  await page.getByLabel('Correo').fill('luis@repaso.test');
   await page.getByLabel('Contraseña').fill('contraseña-nueva-larga');
   await page.getByRole('button', { name: 'Entrar' }).click();
   await page.getByRole('heading', { name: '¿Qué estudiamos hoy?' }).waitFor();

@@ -6,7 +6,7 @@ import { store } from '../store';
 import type { User } from '../types';
 import { busy, dialog, field, formError, shell, toast } from '../ui';
 
-const THEME_KEY = 'fichario:tema';
+const THEME_KEY = 'repaso:tema';
 
 export function applyTheme(value: string) {
   if (value === 'claro' || value === 'oscuro') document.documentElement.dataset.theme = value;
@@ -101,9 +101,9 @@ export function settingsView(): HTMLElement {
     !demo && h('section', { class: 'panel' }, h('h2', null, 'Contraseña'), passForm),
     h('section', { class: 'panel' },
       h('h2', null, 'Tus datos'),
-      h('p', { class: 'muted' }, 'Descarga todo lo que Fichario guarda de ti: carpetas, tarjetas, respuestas y enlaces compartidos, en un archivo JSON.'),
+      h('p', { class: 'muted' }, 'Descarga todo lo que Repaso guarda de ti: carpetas, tarjetas, respuestas y enlaces compartidos, en un archivo JSON.'),
       h('div', { class: 'row-actions' },
-        h('a', { class: 'btn btn-quiet', href: '/api/account/export', download: 'fichario-mis-datos.json' }, 'Descargar mis datos'),
+        h('a', { class: 'btn btn-quiet', href: '/api/account/export', download: 'repaso-mis-datos.json' }, 'Descargar mis datos'),
         !demo && !user.is_admin && h('button', { class: 'btn btn-danger-quiet', type: 'button', onClick: deleteAccount }, 'Borrar mi cuenta'),
       ),
     ),

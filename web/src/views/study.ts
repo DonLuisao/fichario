@@ -6,7 +6,7 @@ import type { Card } from '../types';
 import { emptyState, icon, shell } from '../ui';
 
 type Mode = 'flip' | 'quiz';
-const MODE_KEY = 'fichario:modo';
+const MODE_KEY = 'repaso:modo';
 
 export function studyRoute({ id }: Record<string, string>): HTMLElement {
   let title: string;

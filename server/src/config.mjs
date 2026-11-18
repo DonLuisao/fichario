@@ -3,7 +3,7 @@ export function loadConfig(env = process.env) {
   const origin = (env.APP_ORIGIN ?? 'http://localhost:5173').replace(/\/$/, '');
   return {
     port: Number(env.PORT ?? 3000),
-    dbPath: env.DB_PATH ?? './data/fichario.db',
+    dbPath: env.DB_PATH ?? './data/repaso.db',
     appOrigin: origin,
     // En producción la cookie solo viaja por HTTPS. En local (http://localhost) no puede.
     secureCookies: env.COOKIE_SECURE ? env.COOKIE_SECURE === 'true' : origin.startsWith('https://'),
@@ -13,7 +13,7 @@ export function loadConfig(env = process.env) {
     demoEmail: normalizeEmail(env.DEMO_EMAIL ?? ''),
     demoPassword: env.DEMO_PASSWORD ?? '',
     resendApiKey: env.RESEND_API_KEY ?? '',
-    emailFrom: env.EMAIL_FROM ?? 'Fichario <fichario@envio.luisse.pro>',
+    emailFrom: env.EMAIL_FROM ?? 'Repaso <repaso@envio.luisse.pro>',
     // Copias diarias de la base de datos. Vacío para desactivarlas.
     backupDir: env.BACKUP_DIR ?? '',
     backupKeep: Number(env.BACKUP_KEEP ?? 14),

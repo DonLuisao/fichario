@@ -61,16 +61,16 @@ describe('mi cuenta', () => {
 
 describe('copias de seguridad', () => {
   test('crea una copia al día, que se puede abrir, y guarda solo las últimas', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'fichario-copias-'));
+    const dir = mkdtempSync(join(tmpdir(), 'repaso-copias-'));
     const dbPath = join(dir, 'origen.db');
     const db = openDb(dbPath);
     db.exec("INSERT INTO users (id, email, password_hash, created_at) VALUES ('u', 'a@b.c', 'x', 0)");
     // Copias viejas de días anteriores
-    for (let d = 1; d <= 5; d++) writeFileSync(join(dir, `fichario-2026-10-0${d}.db`), '');
+    for (let d = 1; d <= 5; d++) writeFileSync(join(dir, `repaso-2026-10-0${d}.db`), '');
     let t = Date.UTC(2026, 10, 13, 3, 0, 0);
     const silent = { log() {}, error() {} };
     const backups = startBackups({ db: db.raw, dir, keep: 3, now: () => t, log: silent });
-    const first = join(dir, 'fichario-2026-11-13.db');
+    const first = join(dir, 'repaso-2026-11-13.db');
     assert.ok(existsSync(first));
     const copy = new DatabaseSync(first, { readOnly: true });
     assert.equal(copy.prepare('SELECT email FROM users').get().email, 'a@b.c');
@@ -79,8 +79,8 @@ describe('copias de seguridad', () => {
     t += DAY;
     backups.run();
     backups.stop();
-    const left = readdirSync(dir).filter((f) => f.startsWith('fichario-')).sort();
-    assert.deepEqual(left, ['fichario-2026-10-05.db', 'fichario-2026-11-13.db', 'fichario-2026-11-14.db']);
+    const left = readdirSync(dir).filter((f) => f.startsWith('repaso-')).sort();
+    assert.deepEqual(left, ['repaso-2026-10-05.db', 'repaso-2026-11-13.db', 'repaso-2026-11-14.db']);
     db.close();
   });
 });

@@ -46,7 +46,7 @@ function emit(result) {
     .replace('__VERSION__', hash(precache.join() + html))
     .replace('__PRECACHE__', JSON.stringify(precache));
   writeFileSync(join(OUT, 'sw.js'), sw);
-  console.log(`Fichario compilado en ${OUT}/ (${files.js}, ${files.css})`);
+  console.log(`Repaso compilado en ${OUT}/ (${files.js}, ${files.css})`);
 }
 
 if (watch) {

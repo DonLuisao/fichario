@@ -46,7 +46,7 @@ class Store {
   }
 
   private get key() {
-    return `fichario:datos:${this.user?.id}`;
+    return `repaso:datos:${this.user?.id}`;
   }
 
   // ---- Sesión ----

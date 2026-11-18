@@ -75,7 +75,7 @@ export function transferRoutes(router, deps) {
 
   router.get('/api/export.csv', deps.requireAuth, (ctx) => {
     const folderParam = ctx.query.get('folder_id');
-    let filename = 'fichario.csv';
+    let filename = 'repaso.csv';
     if (folderParam) {
       const folder = ownFolder.get(v.id(folderParam, 'La carpeta'), ctx.user.id);
       if (!folder) throw new HttpError(404, 'No se encuentra la carpeta');

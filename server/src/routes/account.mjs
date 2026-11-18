@@ -29,7 +29,7 @@ export function accountRoutes(router, deps) {
       __raw: true,
       headers: {
         'content-type': 'application/json; charset=utf-8',
-        'content-disposition': 'attachment; filename="fichario-mis-datos.json"',
+        'content-disposition': 'attachment; filename="repaso-mis-datos.json"',
       },
       body: JSON.stringify(data, null, 2),
     };

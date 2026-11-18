@@ -25,7 +25,7 @@ describe('cuentas y sesiones', () => {
     assert.equal(me.data.user.is_admin, true);
     assert.equal(me.data.user.name, 'Luis');
 
-    const otraVez = await app.client().post('/api/auth/register', { email: 'admin@fichario.test', password: 'contraseña-larga' });
+    const otraVez = await app.client().post('/api/auth/register', { email: 'admin@repaso.test', password: 'contraseña-larga' });
     assert.equal(otraVez.status, 400, 'el admin ya existe: hace falta invitación');
   });
 
